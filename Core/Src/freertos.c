@@ -190,7 +190,7 @@ void Upright_ring_Task(void *argument)
   pid_init(&Speed_loop_pid, 0, 0.0, 0, 70, 60);
 
   pid_init(&Upright_ring_pid, 720, 0.0, 3600, 7200-1, 5000);  
-
+//test
   vTaskDelay(pdMS_TO_TICKS(5000));
   for (;;)
   {
