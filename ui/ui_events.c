@@ -22,7 +22,7 @@ void Screen1_init(lv_event_t * e)
     lv_label_set_text_fmt(ui_UprightringD, "D:%d", (int)Upright_ring_pid.kd);
     sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
     lv_label_set_text(ui_SpeedloopP, sbuf);
-    sprintf(sbuf,"I:%.4f",Speed_loop_pid.ki);
+    sprintf(sbuf,"I:%.2f",Speed_loop_pid.ki);
     lv_label_set_text(ui_SpeedloopI, sbuf);
 }
 
@@ -53,14 +53,14 @@ void UprightringD_Right(lv_event_t * e)
 
 void SpeedloopP_Left(lv_event_t * e)
 {
-	Speed_loop_pid.kp +=10;
+	Speed_loop_pid.kp +=5;
     sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
     lv_label_set_text(ui_SpeedloopP, sbuf);
 }
 
 void SpeedloopP_Right(lv_event_t * e)
 {
-	Speed_loop_pid.kp -=10;
+	Speed_loop_pid.kp -=5;
     sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
     lv_label_set_text(ui_SpeedloopP, sbuf);
 }

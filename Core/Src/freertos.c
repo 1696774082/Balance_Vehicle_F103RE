@@ -213,7 +213,7 @@ void Upright_ring_Task(void *argument)
   TickType_t xLastWakeTime=xTaskGetTickCount();
   float vSum = 0;
   // pid_init(&Upright_ring_pid, 720, 0.0, 3600, 7200-1, 5000);  
-  pid_init(&Upright_ring_pid, 792, 0.0, 7800, 7200-1, 5000);  
+  pid_init(&Upright_ring_pid, 992, 0.0, 7800, 7200-1, 5000);  
 
   vTaskDelay(pdMS_TO_TICKS(5000));
   for (;;)
@@ -261,7 +261,7 @@ void Speed_loop_Task(void *argument)
   float target_pitch = 0;
   int v0, v1;
   float vSum;
-  pid_init(&Speed_loop_pid, 0, 0.0, 0, 70, 60);
+  pid_init(&Speed_loop_pid, -30, -2, 0, 70, 60);
   osDelay(600);
   for(;;)
   {
