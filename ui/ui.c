@@ -25,8 +25,8 @@ lv_obj_t * ui_SpeedloopP;
 lv_obj_t * ui_SpeedloopLabel;
 void ui_event_SpeedloopI(lv_event_t * e);
 lv_obj_t * ui_SpeedloopI;
-lv_obj_t * ui_v0Label;
-lv_obj_t * ui_v1Label;
+void ui_event_MotorSwitch(lv_event_t * e);
+lv_obj_t * ui_MotorSwitch;
 lv_obj_t * ui____initial_actions0;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
@@ -90,6 +90,17 @@ void ui_event_SpeedloopI(lv_event_t * e)
     }
     if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
         SpeedloopI_Right(e);
+    }
+}
+void ui_event_MotorSwitch(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_VALUE_CHANGED &&  lv_obj_has_state(target, LV_STATE_CHECKED)) {
+        Motor_switch_checked(e);
+    }
+    if(event_code == LV_EVENT_VALUE_CHANGED &&  !lv_obj_has_state(target, LV_STATE_CHECKED)) {
+        Motor_switch_unchecked(e);
     }
 }
 

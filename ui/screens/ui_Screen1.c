@@ -119,26 +119,39 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_style_bg_color(ui_SpeedloopI, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
     lv_obj_set_style_bg_opa(ui_SpeedloopI, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
 
-    ui_v0Label = lv_label_create(ui_Screen1);
-    lv_obj_set_width(ui_v0Label, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_v0Label, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_v0Label, 25);
-    lv_obj_set_y(ui_v0Label, -18);
-    lv_obj_set_align(ui_v0Label, LV_ALIGN_BOTTOM_LEFT);
-    lv_label_set_text(ui_v0Label, "0000");
+    ui_MotorSwitch = lv_switch_create(ui_Screen1);
+    lv_obj_set_width(ui_MotorSwitch, 26);
+    lv_obj_set_height(ui_MotorSwitch, 14);
+    lv_obj_set_x(ui_MotorSwitch, -23);
+    lv_obj_set_y(ui_MotorSwitch, 9);
+    lv_obj_set_align(ui_MotorSwitch, LV_ALIGN_CENTER);
+    lv_obj_add_state(ui_MotorSwitch, LV_STATE_CHECKED);       /// States
+    lv_obj_set_style_bg_color(ui_MotorSwitch, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_MotorSwitch, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(ui_MotorSwitch, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_opa(ui_MotorSwitch, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_MotorSwitch, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_side(ui_MotorSwitch, LV_BORDER_SIDE_FULL, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_outline_color(ui_MotorSwitch, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
+    lv_obj_set_style_outline_opa(ui_MotorSwitch, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
+    lv_obj_set_style_outline_width(ui_MotorSwitch, 1, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
+    lv_obj_set_style_outline_pad(ui_MotorSwitch, 2, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
 
-    ui_v1Label = lv_label_create(ui_Screen1);
-    lv_obj_set_width(ui_v1Label, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_v1Label, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_v1Label, 25);
-    lv_obj_set_y(ui_v1Label, 0);
-    lv_obj_set_align(ui_v1Label, LV_ALIGN_BOTTOM_LEFT);
-    lv_label_set_text(ui_v1Label, "0000");
+    lv_obj_set_style_bg_color(ui_MotorSwitch, lv_color_hex(0xFFFFFF), LV_PART_INDICATOR | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_MotorSwitch, 255, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    lv_obj_set_style_pad_left(ui_MotorSwitch, -2, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(ui_MotorSwitch, -2, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(ui_MotorSwitch, -2, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_bottom(ui_MotorSwitch, -2, LV_PART_KNOB | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_MotorSwitch, lv_color_hex(0x000000), LV_PART_KNOB | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_opa(ui_MotorSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
 
     lv_obj_add_event_cb(ui_UprightringP, ui_event_UprightringP, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_UprightringD, ui_event_UprightringD, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_SpeedloopP, ui_event_SpeedloopP, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_SpeedloopI, ui_event_SpeedloopI, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_MotorSwitch, ui_event_MotorSwitch, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_Screen1, ui_event_Screen1, LV_EVENT_ALL, NULL);
 
 }

@@ -86,6 +86,11 @@ osMessageQueueId_t speed_queueHandle;
 const osMessageQueueAttr_t speed_queue_attributes = {
   .name = "speed_queue"
 };
+/* Definitions for Motor_isEnable_queue */
+osMessageQueueId_t Motor_isEnable_queueHandle;
+const osMessageQueueAttr_t Motor_isEnable_queue_attributes = {
+  .name = "Motor_isEnable_queue"
+};
 /* Definitions for lvgl_mutex */
 osMutexId_t lvgl_mutexHandle;
 const osMutexAttr_t lvgl_mutex_attributes = {
@@ -134,6 +139,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of speed_queue */
   speed_queueHandle = osMessageQueueNew (1, sizeof(float), &speed_queue_attributes);
+
+  /* creation of Motor_isEnable_queue */
+  Motor_isEnable_queueHandle = osMessageQueueNew (1, sizeof(uint8_t), &Motor_isEnable_queue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -201,16 +209,22 @@ void Upright_ring_Task(void *argument)
   float target_pitch = 0;
   float pitch, roll, yaw;
   int16_t pwm = 0;
-  
+  uint8_t isEnable = 1;
   TickType_t xLastWakeTime=xTaskGetTickCount();
   float vSum = 0;
   // pid_init(&Upright_ring_pid, 720, 0.0, 3600, 7200-1, 5000);  
-  pid_init(&Upright_ring_pid, 720, 0.0, 3600, 7200-1, 5000);  
+  pid_init(&Upright_ring_pid, 792, 0.0, 7800, 7200-1, 5000);  
 
   vTaskDelay(pdMS_TO_TICKS(5000));
   for (;;)
   {
-    for (uint8_t i = 0; i < 10; i++)
+    xQueueReceive(Motor_isEnable_queueHandle, &isEnable, 0);
+    if(isEnable==0){
+      motor_control(0, 0);
+      vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
+      continue;
+    }
+    for (uint8_t i = 0; i < 3; i++)
     {
         MPU6050_Read_DMP(&pitch, &roll, &yaw);
     }
@@ -227,7 +241,7 @@ void Upright_ring_Task(void *argument)
     pwm = pid_updatePD(&Upright_ring_pid, target_pitch - pitch);
     motor_control(pwm, pwm);
 
-    vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));
+    vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5));
   }
   /* USER CODE END Upright_ring_Task */
 }
@@ -255,11 +269,7 @@ void Speed_loop_Task(void *argument)
     v1 = (30000-__HAL_TIM_GetCounter(&htim3));
     __HAL_TIM_SetCounter(&htim1, 30000);
     __HAL_TIM_SetCounter(&htim3, 30000);
-    if(osMutexAcquire(lvgl_mutexHandle, 0)==osOK){
-        lv_label_set_text_fmt(ui_v0Label,"%d",v0);
-        lv_label_set_text_fmt(ui_v1Label,"%d",v1);
-        osMutexRelease(lvgl_mutexHandle);
-    }
+
     
     vSum = (v0/1000.0f + v1/1000.0f)*0.3f+0.7f*vSum;
     target_pitch = pid_updatePI (&Speed_loop_pid, 0 - vSum);

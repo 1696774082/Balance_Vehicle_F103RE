@@ -31,8 +31,8 @@ extern lv_obj_t * ui_SpeedloopP;
 extern lv_obj_t * ui_SpeedloopLabel;
 void ui_event_SpeedloopI(lv_event_t * e);
 extern lv_obj_t * ui_SpeedloopI;
-extern lv_obj_t * ui_v0Label;
-extern lv_obj_t * ui_v1Label;
+void ui_event_MotorSwitch(lv_event_t * e);
+extern lv_obj_t * ui_MotorSwitch;
 extern lv_obj_t * ui____initial_actions0;
 
 LV_FONT_DECLARE(ui_font_chinese);

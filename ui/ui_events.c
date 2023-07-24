@@ -6,7 +6,10 @@
 #include "ui.h"
 #include "pid.h"
 #include "stdio.h"
+#include "cmsis_os.h"
+#include "queue.h"
 extern pid_handler Upright_ring_pid,Speed_loop_pid;
+extern osMessageQueueId_t Motor_isEnable_queueHandle;
 char sbuf[30];
 void Screen1_init(lv_event_t * e)
 {
@@ -14,6 +17,7 @@ void Screen1_init(lv_event_t * e)
     lv_group_add_obj(lv_group_get_default(), ui_UprightringD);
     lv_group_add_obj(lv_group_get_default(), ui_SpeedloopP);
     lv_group_add_obj(lv_group_get_default(), ui_SpeedloopI);
+    lv_group_add_obj(lv_group_get_default(), ui_MotorSwitch);
     lv_label_set_text_fmt(ui_UprightringP, "P:%d", (int)Upright_ring_pid.kp);
     lv_label_set_text_fmt(ui_UprightringD, "D:%d", (int)Upright_ring_pid.kd);
     sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
@@ -73,4 +77,17 @@ void SpeedloopI_Right(lv_event_t * e)
 	Speed_loop_pid.ki -=0.05;
     sprintf(sbuf,"I:%.2f",Speed_loop_pid.ki);
     lv_label_set_text(ui_SpeedloopI, sbuf);
+}
+
+void Motor_switch_checked(lv_event_t * e)
+{
+    uint8_t isEnable=1;
+    Speed_loop_pid.sum_deviation=0;
+	xQueueSend(Motor_isEnable_queueHandle, &isEnable, 10);
+}
+
+void Motor_switch_unchecked(lv_event_t * e)
+{
+	uint8_t isEnable=0;
+	xQueueSend(Motor_isEnable_queueHandle, &isEnable, 10);
 }
