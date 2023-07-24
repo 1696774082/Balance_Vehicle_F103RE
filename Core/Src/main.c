@@ -125,10 +125,9 @@ int main(void)
     lv_init();
     group=lv_group_create();//放输入设备初始化前面
     lv_group_set_default(group);//放输入设备初始化前面
-    
     lv_port_disp_init();
-    
     lv_port_indev_init();
+    
     HAL_TIM_Base_Start_IT(&htim7);
     
     

@@ -69,10 +69,22 @@ const osThreadAttr_t myTask02_attributes = {
   .stack_size = 500 * 4,
   .priority = (osPriority_t) osPriorityRealtime,
 };
+/* Definitions for myTask03 */
+osThreadId_t myTask03Handle;
+const osThreadAttr_t myTask03_attributes = {
+  .name = "myTask03",
+  .stack_size = 500 * 4,
+  .priority = (osPriority_t) osPriorityRealtime1,
+};
 /* Definitions for pitch_queue */
 osMessageQueueId_t pitch_queueHandle;
 const osMessageQueueAttr_t pitch_queue_attributes = {
   .name = "pitch_queue"
+};
+/* Definitions for speed_queue */
+osMessageQueueId_t speed_queueHandle;
+const osMessageQueueAttr_t speed_queue_attributes = {
+  .name = "speed_queue"
 };
 /* Definitions for lvgl_mutex */
 osMutexId_t lvgl_mutexHandle;
@@ -87,6 +99,7 @@ const osMutexAttr_t lvgl_mutex_attributes = {
 
 void StartDefaultTask(void *argument);
 void Upright_ring_Task(void *argument);
+void Speed_loop_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -119,6 +132,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of pitch_queue */
   pitch_queueHandle = osMessageQueueNew (1, sizeof(float), &pitch_queue_attributes);
 
+  /* creation of speed_queue */
+  speed_queueHandle = osMessageQueueNew (1, sizeof(float), &speed_queue_attributes);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -129,6 +145,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of myTask02 */
   myTask02Handle = osThreadNew(Upright_ring_Task, NULL, &myTask02_attributes);
+
+  /* creation of myTask03 */
+  myTask03Handle = osThreadNew(Speed_loop_Task, NULL, &myTask03_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -152,8 +171,8 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
   vTaskDelay(pdMS_TO_TICKS(500));
-    uint32_t r;
-    ui_init();
+  uint32_t r;
+  ui_init();
   for (;;)
   {
     osMutexAcquire(lvgl_mutexHandle, osWaitForever);
@@ -184,13 +203,10 @@ void Upright_ring_Task(void *argument)
   int16_t pwm = 0;
   
   TickType_t xLastWakeTime=xTaskGetTickCount();
-
-  int v0, v1;
-  float vSum;
-  pid_init(&Speed_loop_pid, 0, 0.0, 0, 70, 60);
-
+  float vSum = 0;
+  // pid_init(&Upright_ring_pid, 720, 0.0, 3600, 7200-1, 5000);  
   pid_init(&Upright_ring_pid, 720, 0.0, 3600, 7200-1, 5000);  
-//test
+
   vTaskDelay(pdMS_TO_TICKS(5000));
   for (;;)
   {
@@ -205,6 +221,36 @@ void Upright_ring_Task(void *argument)
       vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
       continue;
     }
+    
+
+    xQueueReceive(speed_queueHandle, &target_pitch, 0);
+    pwm = pid_updatePD(&Upright_ring_pid, target_pitch - pitch);
+    motor_control(pwm, pwm);
+
+    vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));
+  }
+  /* USER CODE END Upright_ring_Task */
+}
+
+/* USER CODE BEGIN Header_Speed_loop_Task */
+/**
+* @brief Function implementing the myTask03 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Speed_loop_Task */
+void Speed_loop_Task(void *argument)
+{
+  /* USER CODE BEGIN Speed_loop_Task */
+  /* Infinite loop */
+  TickType_t xLastWakeTime=xTaskGetTickCount();
+  float target_pitch = 0;
+  int v0, v1;
+  float vSum;
+  pid_init(&Speed_loop_pid, 0, 0.0, 0, 70, 60);
+  osDelay(600);
+  for(;;)
+  {
     v0 = (__HAL_TIM_GetCounter(&htim1) - 30000);
     v1 = (30000-__HAL_TIM_GetCounter(&htim3));
     __HAL_TIM_SetCounter(&htim1, 30000);
@@ -216,14 +262,11 @@ void Upright_ring_Task(void *argument)
     }
     
     vSum = (v0/1000.0f + v1/1000.0f)*0.3f+0.7f*vSum;
-    
     target_pitch = pid_updatePI (&Speed_loop_pid, 0 - vSum);
-    pwm = pid_updatePD(&Upright_ring_pid, target_pitch - pitch);
-    motor_control(pwm, pwm);
-
-    vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));
+    xQueueSend(speed_queueHandle, &target_pitch, 0);
+    vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
   }
-  /* USER CODE END Upright_ring_Task */
+  /* USER CODE END Speed_loop_Task */
 }
 
 /* Private application code --------------------------------------------------*/
