@@ -31,6 +31,11 @@ extern lv_obj_t * ui_Spinner2;
 void ui_event_toPidButton(lv_event_t * e);
 extern lv_obj_t * ui_toPidButton;
 extern lv_obj_t * ui_Label4;
+extern lv_obj_t * ui_Panel4;
+extern lv_obj_t * ui_Spinner3;
+void ui_event_toTsl1401Button(lv_event_t * e);
+extern lv_obj_t * ui_toTsl1401Button;
+extern lv_obj_t * ui_Label6;
 // SCREEN: ui_pidControlScreen
 void ui_pidControlScreen_screen_init(void);
 void ui_event_pidControlScreen(lv_event_t * e);
@@ -79,6 +84,11 @@ extern lv_obj_t * ui_Left_turn_right_turn_panel;
 extern lv_obj_t * ui_Left_turn_right_turnLabel;
 void ui_event_Left_turn_and_right_turn(lv_event_t * e);
 extern lv_obj_t * ui_Left_turn_and_right_turn;
+// SCREEN: ui_tsl1401Screen
+void ui_tsl1401Screen_screen_init(void);
+void ui_event_tsl1401Screen(lv_event_t * e);
+extern lv_obj_t * ui_tsl1401Screen;
+extern lv_obj_t * ui_TSL1401Chart;
 extern lv_obj_t * ui____initial_actions0;
 
 LV_FONT_DECLARE(ui_font_chinese);

@@ -34,6 +34,8 @@ void Forwardandbackward_Left(lv_event_t * e);
 void Forwardandbackward_Right(lv_event_t * e);
 void Leftturnandrightturn_Left(lv_event_t * e);
 void Leftturnandrightturn_Right(lv_event_t * e);
+void TSL1401Screen_load_start(lv_event_t * e);
+void TSL1401Screen_unload_start(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

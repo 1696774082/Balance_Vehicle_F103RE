@@ -36,7 +36,7 @@
 #include "lv_port_disp.h"
 #include "lv_port_indev.h"
 #include "ui.h"
-
+#include "tsl1401.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -206,6 +206,12 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi){
 
     }
 }
+void                    HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
+    if(hadc->Instance == ADC1){
+        tsl1401_adc_callback();
+    }
+}
+
 /* USER CODE END 4 */
 
 /**

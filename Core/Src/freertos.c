@@ -34,6 +34,7 @@
 #include "queue.h"
 #include "lvgl.h"
 #include "ui.h"
+#include "tsl1401.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -75,6 +76,13 @@ const osThreadAttr_t myTask03_attributes = {
   .name = "myTask03",
   .stack_size = 500 * 4,
   .priority = (osPriority_t) osPriorityRealtime1,
+};
+/* Definitions for TSL1401Screen */
+osThreadId_t TSL1401ScreenHandle;
+const osThreadAttr_t TSL1401Screen_attributes = {
+  .name = "TSL1401Screen",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityLow2,
 };
 /* Definitions for pitch_queue */
 osMessageQueueId_t pitch_queueHandle;
@@ -120,6 +128,7 @@ const osMutexAttr_t lvgl_mutex_attributes = {
 void StartDefaultTask(void *argument);
 void Upright_ring_Task(void *argument);
 void Speed_loop_Task(void *argument);
+void TSL1401Screen_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -181,12 +190,16 @@ void MX_FREERTOS_Init(void) {
   /* creation of myTask03 */
   myTask03Handle = osThreadNew(Speed_loop_Task, NULL, &myTask03_attributes);
 
+  /* creation of TSL1401Screen */
+  TSL1401ScreenHandle = osThreadNew(TSL1401Screen_Task, NULL, &TSL1401Screen_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
+  vTaskSuspend(TSL1401ScreenHandle);
   /* USER CODE END RTOS_EVENTS */
 
 }
@@ -312,6 +325,50 @@ void Speed_loop_Task(void *argument)
     vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
   }
   /* USER CODE END Speed_loop_Task */
+}
+
+/* USER CODE BEGIN Header_TSL1401Screen_Task */
+extern uint16_t tsl1401_data[128];
+extern uint8_t tsl1401_data_is_ready;
+/**
+* @brief Function implementing the myTask04 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_TSL1401Screen_Task */
+void TSL1401Screen_Task(void *argument)
+{
+  /* USER CODE BEGIN TSL1401Screen_Task */
+  /* Infinite loop */
+  osDelay(100);
+  osMutexAcquire(lvgl_mutexHandle, osWaitForever);
+  lv_chart_series_t * ui_TSL1401Chart_series=lv_chart_get_series_next(ui_TSL1401Chart,NULL);
+  ui_TSL1401Chart_series->y_points=tsl1401_data;
+    lv_chart_refresh(ui_TSL1401Chart);
+
+    
+  osMutexRelease(lvgl_mutexHandle);
+  for(;;)
+  {
+    tsl1401_start();
+    while(!tsl1401_data_is_ready)
+    {
+      osDelay(1);
+    }
+
+    for (uint8_t i = 0; i < 128; i++)
+    {
+      tsl1401_data[i] = (int)(tsl1401_data[i] / 2500.0f*100.0f);
+    }
+    osMutexAcquire(lvgl_mutexHandle, osWaitForever);
+    lv_chart_refresh(ui_TSL1401Chart);
+    osMutexRelease(lvgl_mutexHandle);
+
+
+
+    osDelay(100);
+  }
+  /* USER CODE END TSL1401Screen_Task */
 }
 
 /* Private application code --------------------------------------------------*/

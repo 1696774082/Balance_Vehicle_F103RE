@@ -4,6 +4,9 @@
         "queue.h": "c",
         "cmsis_os.h": "c",
         "mpu6050.h": "c",
-        "lv_port_disp.h": "c"
+        "lv_port_disp.h": "c",
+        "stm32f1xx_hal.h": "c",
+        "adc.h": "c",
+        "tsl1401.h": "c"
     }
 }

@@ -8,6 +8,7 @@
 #include "stdio.h"
 #include "cmsis_os.h"
 #include "queue.h"
+#include "task.h"
 extern pid_handler Upright_ring_pid,Speed_loop_pid,Steering_ring_pid;
 extern osMessageQueueId_t Motor_isEnable_queueHandle;
 char sbuf[30];
@@ -147,8 +148,11 @@ void zero(lv_event_t * e)
 void mainScreen_init(lv_event_t * e)
 {
     lv_group_remove_all_objs(lv_group_get_default());
+    
+	lv_group_add_obj(lv_group_get_default(), ui_batBar);
 	lv_group_add_obj(lv_group_get_default(), ui_toControlButton);
 	lv_group_add_obj(lv_group_get_default(), ui_toPidButton);
+	lv_group_add_obj(lv_group_get_default(), ui_toTsl1401Button);
 }
 
 void pidControlScreen_init(lv_event_t * e)
@@ -221,4 +225,16 @@ void MotorControlScreen_load_start(lv_event_t * e)
 	lv_group_add_obj(lv_group_get_default(), ui_Left_turn_and_right_turn);
 	lv_group_add_obj(lv_group_get_default(), ui_backButton1);
 	lv_group_add_obj(lv_group_get_default(), ui_MotorSwitch1);
+}
+extern osThreadId_t TSL1401ScreenHandle;
+void TSL1401Screen_load_start(lv_event_t * e)
+{
+	lv_group_remove_all_objs(lv_group_get_default());
+	lv_group_add_obj(lv_group_get_default(), ui_tsl1401Screen);
+    osThreadResume(TSL1401ScreenHandle);
+}
+
+void TSL1401Screen_unload_start(lv_event_t * e)
+{
+	osThreadSuspend(TSL1401ScreenHandle);
 }

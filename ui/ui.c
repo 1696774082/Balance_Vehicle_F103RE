@@ -25,6 +25,11 @@ lv_obj_t * ui_Spinner2;
 void ui_event_toPidButton(lv_event_t * e);
 lv_obj_t * ui_toPidButton;
 lv_obj_t * ui_Label4;
+lv_obj_t * ui_Panel4;
+lv_obj_t * ui_Spinner3;
+void ui_event_toTsl1401Button(lv_event_t * e);
+lv_obj_t * ui_toTsl1401Button;
+lv_obj_t * ui_Label6;
 
 // SCREEN: ui_pidControlScreen
 void ui_pidControlScreen_screen_init(void);
@@ -75,6 +80,12 @@ lv_obj_t * ui_Left_turn_right_turn_panel;
 lv_obj_t * ui_Left_turn_right_turnLabel;
 void ui_event_Left_turn_and_right_turn(lv_event_t * e);
 lv_obj_t * ui_Left_turn_and_right_turn;
+
+// SCREEN: ui_tsl1401Screen
+void ui_tsl1401Screen_screen_init(void);
+void ui_event_tsl1401Screen(lv_event_t * e);
+lv_obj_t * ui_tsl1401Screen;
+lv_obj_t * ui_TSL1401Chart;
 lv_obj_t * ui____initial_actions0;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
@@ -110,6 +121,14 @@ void ui_event_toPidButton(lv_event_t * e)
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_CLICKED) {
         _ui_screen_change(&ui_pidControlScreen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, &ui_pidControlScreen_screen_init);
+    }
+}
+void ui_event_toTsl1401Button(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_tsl1401Screen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, &ui_tsl1401Screen_screen_init);
     }
 }
 void ui_event_pidControlScreen(lv_event_t * e)
@@ -291,6 +310,20 @@ void ui_event_Left_turn_and_right_turn(lv_event_t * e)
         Leftturnandrightturn_Right(e);
     }
 }
+void ui_event_tsl1401Screen(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_SCREEN_LOAD_START) {
+        TSL1401Screen_load_start(e);
+    }
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_mainScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 500, 0, &ui_mainScreen_screen_init);
+    }
+    if(event_code == LV_EVENT_SCREEN_UNLOAD_START) {
+        TSL1401Screen_unload_start(e);
+    }
+}
 
 ///////////////////// SCREENS ////////////////////
 
@@ -303,6 +336,7 @@ void ui_init(void)
     ui_mainScreen_screen_init();
     ui_pidControlScreen_screen_init();
     ui_MotorControlScreen_screen_init();
+    ui_tsl1401Screen_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
     lv_disp_load_scr(ui_mainScreen);
 }
