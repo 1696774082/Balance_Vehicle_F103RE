@@ -303,6 +303,8 @@ void Speed_loop_Task(void *argument)
     __HAL_TIM_SetCounter(&htim3, 30000);
     Speed_difference=v0-v1;
     vSum = (v0/1000.0f + v1/1000.0f)*0.3f+0.7f*vSum;
+    xQueueReceive(target_speed_QueueHandle, &target_speed, 0);
+    xQueueReceive(target_speed_difference_QueueHandle, &target_speed_difference, 0);
     Speed_difference_OUT= pid_update(&Steering_ring_pid, target_speed_difference-Speed_difference);
     xQueueSend(Speed_difference_OUT_queueHandle, &Speed_difference_OUT, 0);
     speed_loop_OUT = pid_updatePI (&Speed_loop_pid, target_speed - vSum);
