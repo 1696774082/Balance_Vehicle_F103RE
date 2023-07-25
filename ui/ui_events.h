@@ -10,7 +10,8 @@
 extern "C" {
 #endif
 
-void Screen1_init(lv_event_t * e);
+void mainScreen_init(lv_event_t * e);
+void pidControlScreen_init(lv_event_t * e);
 void UprightringP_Left(lv_event_t * e);
 void UprightringP_Right(lv_event_t * e);
 void UprightringD_Left(lv_event_t * e);
@@ -28,6 +29,11 @@ void SteeringRingD_Right(lv_event_t * e);
 void SteeringRingI_Left(lv_event_t * e);
 void SteeringRingI_Right(lv_event_t * e);
 void zero(lv_event_t * e);
+void MotorControlScreen_load_start(lv_event_t * e);
+void Forwardandbackward_Left(lv_event_t * e);
+void Forwardandbackward_Right(lv_event_t * e);
+void Leftturnandrightturn_Left(lv_event_t * e);
+void Leftturnandrightturn_Right(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

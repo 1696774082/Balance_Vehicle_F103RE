@@ -14,10 +14,27 @@ extern "C" {
 
 #include "ui_helpers.h"
 #include "ui_events.h"
-// SCREEN: ui_Screen1
-void ui_Screen1_screen_init(void);
-void ui_event_Screen1(lv_event_t * e);
-extern lv_obj_t * ui_Screen1;
+// SCREEN: ui_mainScreen
+void ui_mainScreen_screen_init(void);
+void ui_event_mainScreen(lv_event_t * e);
+extern lv_obj_t * ui_mainScreen;
+extern lv_obj_t * ui_Panel3;
+extern lv_obj_t * ui_Label5;
+extern lv_obj_t * ui_batBar;
+extern lv_obj_t * ui_Panel2;
+extern lv_obj_t * ui_Spinner1;
+void ui_event_toControlButton(lv_event_t * e);
+extern lv_obj_t * ui_toControlButton;
+extern lv_obj_t * ui_Label2;
+extern lv_obj_t * ui_Panel1;
+extern lv_obj_t * ui_Spinner2;
+void ui_event_toPidButton(lv_event_t * e);
+extern lv_obj_t * ui_toPidButton;
+extern lv_obj_t * ui_Label4;
+// SCREEN: ui_pidControlScreen
+void ui_pidControlScreen_screen_init(void);
+void ui_event_pidControlScreen(lv_event_t * e);
+extern lv_obj_t * ui_pidControlScreen;
 extern lv_obj_t * ui_Uprightring;
 void ui_event_UprightringP(lv_event_t * e);
 extern lv_obj_t * ui_UprightringP;
@@ -42,6 +59,26 @@ extern lv_obj_t * ui_SteeringringI;
 void ui_event_zeroButton(lv_event_t * e);
 extern lv_obj_t * ui_zeroButton;
 extern lv_obj_t * ui_Label1;
+void ui_event_backButton(lv_event_t * e);
+extern lv_obj_t * ui_backButton;
+extern lv_obj_t * ui_Label3;
+// SCREEN: ui_MotorControlScreen
+void ui_MotorControlScreen_screen_init(void);
+void ui_event_MotorControlScreen(lv_event_t * e);
+extern lv_obj_t * ui_MotorControlScreen;
+extern lv_obj_t * ui_Forward_and_backward_panel;
+extern lv_obj_t * ui_Forward_and_backwardLabel;
+void ui_event_Forward_and_backward(lv_event_t * e);
+extern lv_obj_t * ui_Forward_and_backward;
+void ui_event_MotorSwitch1(lv_event_t * e);
+extern lv_obj_t * ui_MotorSwitch1;
+void ui_event_backButton1(lv_event_t * e);
+extern lv_obj_t * ui_backButton1;
+extern lv_obj_t * ui_Label7;
+extern lv_obj_t * ui_Left_turn_right_turn_panel;
+extern lv_obj_t * ui_Left_turn_right_turnLabel;
+void ui_event_Left_turn_and_right_turn(lv_event_t * e);
+extern lv_obj_t * ui_Left_turn_and_right_turn;
 extern lv_obj_t * ui____initial_actions0;
 
 LV_FONT_DECLARE(ui_font_chinese);

@@ -11,34 +11,7 @@
 extern pid_handler Upright_ring_pid,Speed_loop_pid,Steering_ring_pid;
 extern osMessageQueueId_t Motor_isEnable_queueHandle;
 char sbuf[30];
-void Screen1_init(lv_event_t * e)
-{
-    lv_group_add_obj(lv_group_get_default(), ui_MotorSwitch);
-	lv_group_add_obj(lv_group_get_default(), ui_UprightringP);
-    lv_group_add_obj(lv_group_get_default(), ui_UprightringD);
-    lv_group_add_obj(lv_group_get_default(), ui_SpeedloopP);
-    lv_group_add_obj(lv_group_get_default(), ui_SpeedloopI);
-    lv_group_add_obj(lv_group_get_default(), ui_SteeringringP);
-    lv_group_add_obj(lv_group_get_default(), ui_SteeringringI);
-    lv_group_add_obj(lv_group_get_default(), ui_SteeringringD);
-    lv_group_add_obj(lv_group_get_default(), ui_zeroButton);
-    
-    
-    lv_label_set_text_fmt(ui_UprightringP, "P:%d", (int)Upright_ring_pid.kp);
-    lv_label_set_text_fmt(ui_UprightringD, "D:%d", (int)Upright_ring_pid.kd);
-    sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
-    lv_label_set_text(ui_SpeedloopP, sbuf);
-    sprintf(sbuf,"I:%.1f",Speed_loop_pid.ki);
-    lv_label_set_text(ui_SpeedloopI, sbuf);
-    sprintf(sbuf,"P:%d",(int)Steering_ring_pid.kp);
-    lv_label_set_text(ui_SteeringringP, sbuf);
-    sprintf(sbuf,"I:%.2f",Steering_ring_pid.ki);
-    lv_label_set_text(ui_SteeringringI, sbuf);
-    sprintf(sbuf,"D:%d",(int)Steering_ring_pid.kd);
-    lv_label_set_text(ui_SteeringringD, sbuf);
-    
 
-}
 
 
 void UprightringP_Left(lv_event_t * e)
@@ -169,4 +142,83 @@ void zero(lv_event_t * e)
     lv_label_set_text(ui_SteeringringD, sbuf);
     sprintf(sbuf,"I:%.2f",Steering_ring_pid.ki);
     lv_label_set_text(ui_SteeringringI, sbuf);
+}
+
+void mainScreen_init(lv_event_t * e)
+{
+    lv_group_remove_all_objs(lv_group_get_default());
+	lv_group_add_obj(lv_group_get_default(), ui_toControlButton);
+	lv_group_add_obj(lv_group_get_default(), ui_toPidButton);
+}
+
+void pidControlScreen_init(lv_event_t * e)
+{
+    lv_group_remove_all_objs(lv_group_get_default());
+	lv_group_add_obj(lv_group_get_default(), ui_MotorSwitch);
+	lv_group_add_obj(lv_group_get_default(), ui_UprightringP);
+    lv_group_add_obj(lv_group_get_default(), ui_UprightringD);
+    lv_group_add_obj(lv_group_get_default(), ui_SpeedloopP);
+    lv_group_add_obj(lv_group_get_default(), ui_SpeedloopI);
+    lv_group_add_obj(lv_group_get_default(), ui_SteeringringP);
+    lv_group_add_obj(lv_group_get_default(), ui_SteeringringI);
+    lv_group_add_obj(lv_group_get_default(), ui_SteeringringD);
+    lv_group_add_obj(lv_group_get_default(), ui_backButton);
+    lv_group_add_obj(lv_group_get_default(), ui_zeroButton);
+    
+    
+    lv_label_set_text_fmt(ui_UprightringP, "P:%d", (int)Upright_ring_pid.kp);
+    lv_label_set_text_fmt(ui_UprightringD, "D:%d", (int)Upright_ring_pid.kd);
+    sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
+    lv_label_set_text(ui_SpeedloopP, sbuf);
+    sprintf(sbuf,"I:%.1f",Speed_loop_pid.ki);
+    lv_label_set_text(ui_SpeedloopI, sbuf);
+    sprintf(sbuf,"P:%d",(int)Steering_ring_pid.kp);
+    lv_label_set_text(ui_SteeringringP, sbuf);
+    sprintf(sbuf,"I:%.2f",Steering_ring_pid.ki);
+    lv_label_set_text(ui_SteeringringI, sbuf);
+    sprintf(sbuf,"D:%d",(int)Steering_ring_pid.kd);
+    lv_label_set_text(ui_SteeringringD, sbuf);
+}
+int32_t target_speed_difference=0;
+  float target_speed;
+  extern osMessageQueueId_t target_speed_QueueHandle,target_speed_difference_QueueHandle;
+void Forwardandbackward_Left(lv_event_t * e)
+{
+	target_speed+=0.02;
+    xQueueOverwrite(target_speed_QueueHandle, &target_speed);
+    sprintf(sbuf,"%.2f",target_speed);
+    lv_label_set_text(ui_Forward_and_backward, sbuf);
+}
+
+void Forwardandbackward_Right(lv_event_t * e)
+{
+	target_speed-=0.02;
+    xQueueOverwrite(target_speed_QueueHandle, &target_speed);
+    sprintf(sbuf,"%.2f",target_speed);
+    lv_label_set_text(ui_Forward_and_backward, sbuf);
+}
+
+void Leftturnandrightturn_Left(lv_event_t * e)
+{
+	target_speed_difference+=10;
+    xQueueOverwrite(target_speed_difference_QueueHandle, &target_speed_difference);
+    sprintf(sbuf,"%d",target_speed_difference);
+    lv_label_set_text(ui_Left_turn_and_right_turn, sbuf);
+}
+
+void Leftturnandrightturn_Right(lv_event_t * e)
+{
+	target_speed_difference-=10;
+    xQueueOverwrite(target_speed_difference_QueueHandle, &target_speed_difference);
+    sprintf(sbuf,"%d",target_speed_difference);
+    lv_label_set_text(ui_Left_turn_and_right_turn, sbuf);
+}
+
+void MotorControlScreen_load_start(lv_event_t * e)
+{
+	lv_group_remove_all_objs(lv_group_get_default());
+	lv_group_add_obj(lv_group_get_default(), ui_Forward_and_backward);
+	lv_group_add_obj(lv_group_get_default(), ui_Left_turn_and_right_turn);
+	lv_group_add_obj(lv_group_get_default(), ui_backButton1);
+	lv_group_add_obj(lv_group_get_default(), ui_MotorSwitch1);
 }

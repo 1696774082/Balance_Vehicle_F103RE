@@ -290,10 +290,10 @@ void Speed_loop_Task(void *argument)
   float vSum;
   int32_t Speed_difference = 0;
   int16_t Speed_difference_OUT;
-  int32_t target_speed_difference=5;
+  int32_t target_speed_difference=0;
   float target_speed;
   pid_init(&Speed_loop_pid, -30, -2, 0, 70, 60);
-  pid_init(&Steering_ring_pid, 30, 5, 30, 7199, 4000);
+  pid_init(&Steering_ring_pid, 50, 8, 10, 7199, 4000);
   osDelay(600);
   for(;;)
   {

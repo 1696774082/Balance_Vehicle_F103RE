@@ -8,10 +8,28 @@
 
 ///////////////////// VARIABLES ////////////////////
 
-// SCREEN: ui_Screen1
-void ui_Screen1_screen_init(void);
-void ui_event_Screen1(lv_event_t * e);
-lv_obj_t * ui_Screen1;
+// SCREEN: ui_mainScreen
+void ui_mainScreen_screen_init(void);
+void ui_event_mainScreen(lv_event_t * e);
+lv_obj_t * ui_mainScreen;
+lv_obj_t * ui_Panel3;
+lv_obj_t * ui_Label5;
+lv_obj_t * ui_batBar;
+lv_obj_t * ui_Panel2;
+lv_obj_t * ui_Spinner1;
+void ui_event_toControlButton(lv_event_t * e);
+lv_obj_t * ui_toControlButton;
+lv_obj_t * ui_Label2;
+lv_obj_t * ui_Panel1;
+lv_obj_t * ui_Spinner2;
+void ui_event_toPidButton(lv_event_t * e);
+lv_obj_t * ui_toPidButton;
+lv_obj_t * ui_Label4;
+
+// SCREEN: ui_pidControlScreen
+void ui_pidControlScreen_screen_init(void);
+void ui_event_pidControlScreen(lv_event_t * e);
+lv_obj_t * ui_pidControlScreen;
 lv_obj_t * ui_Uprightring;
 void ui_event_UprightringP(lv_event_t * e);
 lv_obj_t * ui_UprightringP;
@@ -36,6 +54,27 @@ lv_obj_t * ui_SteeringringI;
 void ui_event_zeroButton(lv_event_t * e);
 lv_obj_t * ui_zeroButton;
 lv_obj_t * ui_Label1;
+void ui_event_backButton(lv_event_t * e);
+lv_obj_t * ui_backButton;
+lv_obj_t * ui_Label3;
+
+// SCREEN: ui_MotorControlScreen
+void ui_MotorControlScreen_screen_init(void);
+void ui_event_MotorControlScreen(lv_event_t * e);
+lv_obj_t * ui_MotorControlScreen;
+lv_obj_t * ui_Forward_and_backward_panel;
+lv_obj_t * ui_Forward_and_backwardLabel;
+void ui_event_Forward_and_backward(lv_event_t * e);
+lv_obj_t * ui_Forward_and_backward;
+void ui_event_MotorSwitch1(lv_event_t * e);
+lv_obj_t * ui_MotorSwitch1;
+void ui_event_backButton1(lv_event_t * e);
+lv_obj_t * ui_backButton1;
+lv_obj_t * ui_Label7;
+lv_obj_t * ui_Left_turn_right_turn_panel;
+lv_obj_t * ui_Left_turn_right_turnLabel;
+void ui_event_Left_turn_and_right_turn(lv_event_t * e);
+lv_obj_t * ui_Left_turn_and_right_turn;
 lv_obj_t * ui____initial_actions0;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
@@ -49,12 +88,36 @@ lv_obj_t * ui____initial_actions0;
 ///////////////////// ANIMATIONS ////////////////////
 
 ///////////////////// FUNCTIONS ////////////////////
-void ui_event_Screen1(lv_event_t * e)
+void ui_event_mainScreen(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_SCREEN_LOAD_START) {
-        Screen1_init(e);
+        mainScreen_init(e);
+    }
+}
+void ui_event_toControlButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_MotorControlScreen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, &ui_MotorControlScreen_screen_init);
+    }
+}
+void ui_event_toPidButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_pidControlScreen, LV_SCR_LOAD_ANIM_MOVE_LEFT, 500, 0, &ui_pidControlScreen_screen_init);
+    }
+}
+void ui_event_pidControlScreen(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_SCREEN_LOAD_START) {
+        pidControlScreen_init(e);
     }
 }
 void ui_event_UprightringP(lv_event_t * e)
@@ -159,6 +222,75 @@ void ui_event_zeroButton(lv_event_t * e)
         _ui_state_modify(ui_Label1, LV_STATE_FOCUSED, _UI_MODIFY_STATE_REMOVE);
     }
 }
+void ui_event_backButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_mainScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 500, 0, &ui_mainScreen_screen_init);
+    }
+    if(event_code == LV_EVENT_FOCUSED) {
+        _ui_state_modify(ui_Label3, LV_STATE_FOCUSED, _UI_MODIFY_STATE_ADD);
+    }
+    if(event_code == LV_EVENT_DEFOCUSED) {
+        _ui_state_modify(ui_Label3, LV_STATE_FOCUSED, _UI_MODIFY_STATE_REMOVE);
+    }
+}
+void ui_event_MotorControlScreen(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_SCREEN_LOAD_START) {
+        MotorControlScreen_load_start(e);
+    }
+}
+void ui_event_Forward_and_backward(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
+        Forwardandbackward_Left(e);
+    }
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
+        Forwardandbackward_Right(e);
+    }
+}
+void ui_event_MotorSwitch1(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_VALUE_CHANGED &&  lv_obj_has_state(target, LV_STATE_CHECKED)) {
+        Motor_switch_checked(e);
+    }
+    if(event_code == LV_EVENT_VALUE_CHANGED &&  !lv_obj_has_state(target, LV_STATE_CHECKED)) {
+        Motor_switch_unchecked(e);
+    }
+}
+void ui_event_backButton1(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_screen_change(&ui_mainScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 500, 0, &ui_mainScreen_screen_init);
+    }
+    if(event_code == LV_EVENT_FOCUSED) {
+        _ui_state_modify(ui_Label7, LV_STATE_FOCUSED, _UI_MODIFY_STATE_ADD);
+    }
+    if(event_code == LV_EVENT_DEFOCUSED) {
+        _ui_state_modify(ui_Label7, LV_STATE_FOCUSED, _UI_MODIFY_STATE_REMOVE);
+    }
+}
+void ui_event_Left_turn_and_right_turn(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
+        Leftturnandrightturn_Left(e);
+    }
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
+        Leftturnandrightturn_Right(e);
+    }
+}
 
 ///////////////////// SCREENS ////////////////////
 
@@ -168,7 +300,9 @@ void ui_init(void)
     lv_theme_t * theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED),
                                                true, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
-    ui_Screen1_screen_init();
+    ui_mainScreen_screen_init();
+    ui_pidControlScreen_screen_init();
+    ui_MotorControlScreen_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
-    lv_disp_load_scr(ui_Screen1);
+    lv_disp_load_scr(ui_mainScreen);
 }
