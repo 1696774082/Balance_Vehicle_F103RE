@@ -81,15 +81,30 @@ osMessageQueueId_t pitch_queueHandle;
 const osMessageQueueAttr_t pitch_queue_attributes = {
   .name = "pitch_queue"
 };
-/* Definitions for speed_queue */
-osMessageQueueId_t speed_queueHandle;
-const osMessageQueueAttr_t speed_queue_attributes = {
-  .name = "speed_queue"
+/* Definitions for speed_loop_OUT_queue */
+osMessageQueueId_t speed_loop_OUT_queueHandle;
+const osMessageQueueAttr_t speed_loop_OUT_queue_attributes = {
+  .name = "speed_loop_OUT_queue"
 };
 /* Definitions for Motor_isEnable_queue */
 osMessageQueueId_t Motor_isEnable_queueHandle;
 const osMessageQueueAttr_t Motor_isEnable_queue_attributes = {
   .name = "Motor_isEnable_queue"
+};
+/* Definitions for Speed_difference_OUT_queue */
+osMessageQueueId_t Speed_difference_OUT_queueHandle;
+const osMessageQueueAttr_t Speed_difference_OUT_queue_attributes = {
+  .name = "Speed_difference_OUT_queue"
+};
+/* Definitions for target_speed_Queue */
+osMessageQueueId_t target_speed_QueueHandle;
+const osMessageQueueAttr_t target_speed_Queue_attributes = {
+  .name = "target_speed_Queue"
+};
+/* Definitions for target_speed_difference_Queue */
+osMessageQueueId_t target_speed_difference_QueueHandle;
+const osMessageQueueAttr_t target_speed_difference_Queue_attributes = {
+  .name = "target_speed_difference_Queue"
 };
 /* Definitions for lvgl_mutex */
 osMutexId_t lvgl_mutexHandle;
@@ -137,11 +152,20 @@ void MX_FREERTOS_Init(void) {
   /* creation of pitch_queue */
   pitch_queueHandle = osMessageQueueNew (1, sizeof(float), &pitch_queue_attributes);
 
-  /* creation of speed_queue */
-  speed_queueHandle = osMessageQueueNew (1, sizeof(float), &speed_queue_attributes);
+  /* creation of speed_loop_OUT_queue */
+  speed_loop_OUT_queueHandle = osMessageQueueNew (1, sizeof(float), &speed_loop_OUT_queue_attributes);
 
   /* creation of Motor_isEnable_queue */
   Motor_isEnable_queueHandle = osMessageQueueNew (1, sizeof(uint8_t), &Motor_isEnable_queue_attributes);
+
+  /* creation of Speed_difference_OUT_queue */
+  Speed_difference_OUT_queueHandle = osMessageQueueNew (1, sizeof(int16_t), &Speed_difference_OUT_queue_attributes);
+
+  /* creation of target_speed_Queue */
+  target_speed_QueueHandle = osMessageQueueNew (1, sizeof(float), &target_speed_Queue_attributes);
+
+  /* creation of target_speed_difference_Queue */
+  target_speed_difference_QueueHandle = osMessageQueueNew (1, sizeof(int32_t), &target_speed_difference_Queue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -193,7 +217,8 @@ void StartDefaultTask(void *argument)
 }
 
 /* USER CODE BEGIN Header_Upright_ring_Task */
-pid_handler Upright_ring_pid,Speed_loop_pid;
+pid_handler Upright_ring_pid,Speed_loop_pid,Steering_ring_pid;
+;
 
 /**
  * @brief Function implementing the myTask02 thread.
@@ -206,12 +231,13 @@ void Upright_ring_Task(void *argument)
   /* USER CODE BEGIN Upright_ring_Task */
   /* Infinite loop */
   
-  float target_pitch = 0;
+  float speed_loop_OUT = 0;
   float pitch, roll, yaw;
   int16_t pwm = 0;
   uint8_t isEnable = 1;
   TickType_t xLastWakeTime=xTaskGetTickCount();
   float vSum = 0;
+  int16_t Speed_difference_OUT;
   // pid_init(&Upright_ring_pid, 720, 0.0, 3600, 7200-1, 5000);  
   pid_init(&Upright_ring_pid, 992, 0.0, 7800, 7200-1, 5000);  
 
@@ -237,9 +263,10 @@ void Upright_ring_Task(void *argument)
     }
     
 
-    xQueueReceive(speed_queueHandle, &target_pitch, 0);
-    pwm = pid_updatePD(&Upright_ring_pid, target_pitch - pitch);
-    motor_control(pwm, pwm);
+    xQueueReceive(speed_loop_OUT_queueHandle, &speed_loop_OUT, 0);
+    pwm = pid_updatePD(&Upright_ring_pid, speed_loop_OUT - pitch);
+    xQueueReceive(Speed_difference_OUT_queueHandle, &Speed_difference_OUT, 0);
+    motor_control(pwm+Speed_difference_OUT, pwm-Speed_difference_OUT);
 
     vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5));
   }
@@ -258,10 +285,15 @@ void Speed_loop_Task(void *argument)
   /* USER CODE BEGIN Speed_loop_Task */
   /* Infinite loop */
   TickType_t xLastWakeTime=xTaskGetTickCount();
-  float target_pitch = 0;
+  float speed_loop_OUT = 0;
   int v0, v1;
   float vSum;
+  int32_t Speed_difference = 0;
+  int16_t Speed_difference_OUT;
+  int32_t target_speed_difference=5;
+  float target_speed;
   pid_init(&Speed_loop_pid, -30, -2, 0, 70, 60);
+  pid_init(&Steering_ring_pid, 30, 5, 30, 7199, 4000);
   osDelay(600);
   for(;;)
   {
@@ -269,11 +301,12 @@ void Speed_loop_Task(void *argument)
     v1 = (30000-__HAL_TIM_GetCounter(&htim3));
     __HAL_TIM_SetCounter(&htim1, 30000);
     __HAL_TIM_SetCounter(&htim3, 30000);
-
-    
+    Speed_difference=v0-v1;
     vSum = (v0/1000.0f + v1/1000.0f)*0.3f+0.7f*vSum;
-    target_pitch = pid_updatePI (&Speed_loop_pid, 0 - vSum);
-    xQueueSend(speed_queueHandle, &target_pitch, 0);
+    Speed_difference_OUT= pid_update(&Steering_ring_pid, target_speed_difference-Speed_difference);
+    xQueueSend(Speed_difference_OUT_queueHandle, &Speed_difference_OUT, 0);
+    speed_loop_OUT = pid_updatePI (&Speed_loop_pid, target_speed - vSum);
+    xQueueSend(speed_loop_OUT_queueHandle, &speed_loop_OUT, 0);
     vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
   }
   /* USER CODE END Speed_loop_Task */

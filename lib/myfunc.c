@@ -1,6 +1,10 @@
 #include "myfunc.h"
 
 void motor_control(int16_t motor1, int16_t motor2){
+    if(motor1>7199)motor1=7199;
+    if(motor1<-7199)motor1=-7199;
+    if(motor2>7199)motor2=7199;
+    if(motor2<-7199)motor2=-7199;
     if(motor1 >= 0){ 
     __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_1, motor1);
     __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, 0);

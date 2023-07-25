@@ -21,6 +21,13 @@ void SpeedloopI_Left(lv_event_t * e);
 void SpeedloopI_Right(lv_event_t * e);
 void Motor_switch_checked(lv_event_t * e);
 void Motor_switch_unchecked(lv_event_t * e);
+void SteeringRingP_Left(lv_event_t * e);
+void SteeringRingP_Right(lv_event_t * e);
+void SteeringRingD_Left(lv_event_t * e);
+void SteeringRingD_Right(lv_event_t * e);
+void SteeringRingI_Left(lv_event_t * e);
+void SteeringRingI_Right(lv_event_t * e);
+void zero(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

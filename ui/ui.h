@@ -18,7 +18,6 @@ extern "C" {
 void ui_Screen1_screen_init(void);
 void ui_event_Screen1(lv_event_t * e);
 extern lv_obj_t * ui_Screen1;
-extern lv_obj_t * ui_Spinner1;
 extern lv_obj_t * ui_Uprightring;
 void ui_event_UprightringP(lv_event_t * e);
 extern lv_obj_t * ui_UprightringP;
@@ -33,6 +32,16 @@ void ui_event_SpeedloopI(lv_event_t * e);
 extern lv_obj_t * ui_SpeedloopI;
 void ui_event_MotorSwitch(lv_event_t * e);
 extern lv_obj_t * ui_MotorSwitch;
+extern lv_obj_t * ui_Steeringring;
+void ui_event_SteeringringP(lv_event_t * e);
+extern lv_obj_t * ui_SteeringringP;
+void ui_event_SteeringringD(lv_event_t * e);
+extern lv_obj_t * ui_SteeringringD;
+void ui_event_SteeringringI(lv_event_t * e);
+extern lv_obj_t * ui_SteeringringI;
+void ui_event_zeroButton(lv_event_t * e);
+extern lv_obj_t * ui_zeroButton;
+extern lv_obj_t * ui_Label1;
 extern lv_obj_t * ui____initial_actions0;
 
 LV_FONT_DECLARE(ui_font_chinese);

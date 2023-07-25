@@ -12,7 +12,6 @@
 void ui_Screen1_screen_init(void);
 void ui_event_Screen1(lv_event_t * e);
 lv_obj_t * ui_Screen1;
-lv_obj_t * ui_Spinner1;
 lv_obj_t * ui_Uprightring;
 void ui_event_UprightringP(lv_event_t * e);
 lv_obj_t * ui_UprightringP;
@@ -27,6 +26,16 @@ void ui_event_SpeedloopI(lv_event_t * e);
 lv_obj_t * ui_SpeedloopI;
 void ui_event_MotorSwitch(lv_event_t * e);
 lv_obj_t * ui_MotorSwitch;
+lv_obj_t * ui_Steeringring;
+void ui_event_SteeringringP(lv_event_t * e);
+lv_obj_t * ui_SteeringringP;
+void ui_event_SteeringringD(lv_event_t * e);
+lv_obj_t * ui_SteeringringD;
+void ui_event_SteeringringI(lv_event_t * e);
+lv_obj_t * ui_SteeringringI;
+void ui_event_zeroButton(lv_event_t * e);
+lv_obj_t * ui_zeroButton;
+lv_obj_t * ui_Label1;
 lv_obj_t * ui____initial_actions0;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
@@ -101,6 +110,53 @@ void ui_event_MotorSwitch(lv_event_t * e)
     }
     if(event_code == LV_EVENT_VALUE_CHANGED &&  !lv_obj_has_state(target, LV_STATE_CHECKED)) {
         Motor_switch_unchecked(e);
+    }
+}
+void ui_event_SteeringringP(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
+        SteeringRingP_Left(e);
+    }
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
+        SteeringRingP_Right(e);
+    }
+}
+void ui_event_SteeringringD(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
+        SteeringRingD_Left(e);
+    }
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
+        SteeringRingD_Right(e);
+    }
+}
+void ui_event_SteeringringI(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
+        SteeringRingI_Left(e);
+    }
+    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
+        SteeringRingI_Right(e);
+    }
+}
+void ui_event_zeroButton(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        zero(e);
+    }
+    if(event_code == LV_EVENT_FOCUSED) {
+        _ui_state_modify(ui_Label1, LV_STATE_FOCUSED, _UI_MODIFY_STATE_ADD);
+    }
+    if(event_code == LV_EVENT_DEFOCUSED) {
+        _ui_state_modify(ui_Label1, LV_STATE_FOCUSED, _UI_MODIFY_STATE_REMOVE);
     }
 }
 
