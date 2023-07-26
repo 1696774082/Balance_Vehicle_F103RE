@@ -16,7 +16,7 @@ void tsl1401_start(void)
 }
 void tsl1401_adc_callback(void)
 {
-    uint32_t delay_count = 0;
+    uint32_t delay_count = 3000;
     if(tsl1401_data_index >= 128)
     {
         tsl1401_data_index = 0;
@@ -26,7 +26,8 @@ void tsl1401_adc_callback(void)
     }
     tsl1401_data[tsl1401_data_index++] = HAL_ADC_GetValue(&hadc1);
     HAL_GPIO_WritePin(TSL1401_CLK_GPIO_Port,TSL1401_CLK_Pin,GPIO_PIN_SET);
-    HAL_GPIO_WritePin(TSL1401_CLK_GPIO_Port,TSL1401_CLK_Pin,GPIO_PIN_RESET);
     while(delay_count--);
+    HAL_GPIO_WritePin(TSL1401_CLK_GPIO_Port,TSL1401_CLK_Pin,GPIO_PIN_RESET);
+    
     HAL_ADC_Start_IT(&hadc1);
 }

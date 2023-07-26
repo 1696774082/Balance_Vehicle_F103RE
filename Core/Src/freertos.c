@@ -306,7 +306,7 @@ void Speed_loop_Task(void *argument)
   int32_t target_speed_difference=0;
   float target_speed;
   pid_init(&Speed_loop_pid, -30, -2, 0, 70, 60);
-  pid_init(&Steering_ring_pid, 50, 8, 10, 7199, 4000);
+  pid_init(&Steering_ring_pid, 50, 5, 10, 7199, 4000);
   osDelay(600);
   for(;;)
   {
@@ -340,7 +340,6 @@ void TSL1401Screen_Task(void *argument)
 {
   /* USER CODE BEGIN TSL1401Screen_Task */
   /* Infinite loop */
-  osDelay(100);
   osMutexAcquire(lvgl_mutexHandle, osWaitForever);
   lv_chart_series_t * ui_TSL1401Chart_series=lv_chart_get_series_next(ui_TSL1401Chart,NULL);
   ui_TSL1401Chart_series->y_points=tsl1401_data;
