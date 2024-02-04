@@ -174,7 +174,7 @@ void MX_FREERTOS_Init(void) {
   target_speed_QueueHandle = osMessageQueueNew (1, sizeof(float), &target_speed_Queue_attributes);
 
   /* creation of target_speed_difference_Queue */
-  target_speed_difference_QueueHandle = osMessageQueueNew (1, sizeof(int32_t), &target_speed_difference_Queue_attributes);
+  target_speed_difference_QueueHandle = osMessageQueueNew (1, sizeof(float), &target_speed_difference_Queue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -231,7 +231,9 @@ void StartDefaultTask(void *argument)
 
 /* USER CODE BEGIN Header_Upright_ring_Task */
 pid_handler Upright_ring_pid,Speed_loop_pid,Steering_ring_pid;
-;
+//定义循迹转向PID
+pid_handler TSL1401_pid;
+
 
 /**
  * @brief Function implementing the myTask02 thread.
@@ -254,10 +256,11 @@ void Upright_ring_Task(void *argument)
   // pid_init(&Upright_ring_pid, 720, 0.0, 3600, 7200-1, 5000);  
   pid_init(&Upright_ring_pid, 992, 0.0, 7800, 7200-1, 5000);  
 
-  vTaskDelay(pdMS_TO_TICKS(5000));
+  vTaskDelay(pdMS_TO_TICKS(3000));
   for (;;)
   {
-    xQueueReceive(Motor_isEnable_queueHandle, &isEnable, 0);
+    
+    xQueuePeek(Motor_isEnable_queueHandle, &isEnable, 0);
     if(isEnable==0){
       motor_control(0, 0);
       vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
@@ -303,10 +306,10 @@ void Speed_loop_Task(void *argument)
   float vSum;
   int32_t Speed_difference = 0;
   int16_t Speed_difference_OUT;
-  int32_t target_speed_difference=0;
+  float target_speed_difference=0;
   float target_speed;
   pid_init(&Speed_loop_pid, -30, -2, 0, 70, 60);
-  pid_init(&Steering_ring_pid, 50, 5, 10, 7199, 4000);
+  pid_init(&Steering_ring_pid, 40, 5, -10, 7199, 4000);
   osDelay(600);
   for(;;)
   {
@@ -343,10 +346,12 @@ void TSL1401Screen_Task(void *argument)
   osMutexAcquire(lvgl_mutexHandle, osWaitForever);
   lv_chart_series_t * ui_TSL1401Chart_series=lv_chart_get_series_next(ui_TSL1401Chart,NULL);
   ui_TSL1401Chart_series->y_points=tsl1401_data;
-    lv_chart_refresh(ui_TSL1401Chart);
-
-    
+  lv_chart_refresh(ui_TSL1401Chart);
   osMutexRelease(lvgl_mutexHandle);
+  TickType_t xLastWakeTime=xTaskGetTickCount();
+  pid_init(&TSL1401_pid, 1, 0, -0.4, 100, 30);
+  //定义PID输出滤波
+    float pid_out_filter = 0;
   for(;;)
   {
     tsl1401_start();
@@ -354,7 +359,7 @@ void TSL1401Screen_Task(void *argument)
     {
       osDelay(1);
     }
-
+    //采集完成
     for (uint8_t i = 0; i < 128; i++)
     {
       tsl1401_data[i] = (int)(tsl1401_data[i] / 2500.0f*100.0f);
@@ -362,10 +367,38 @@ void TSL1401Screen_Task(void *argument)
     osMutexAcquire(lvgl_mutexHandle, osWaitForever);
     lv_chart_refresh(ui_TSL1401Chart);
     osMutexRelease(lvgl_mutexHandle);
+    //for循环找到tsl1401_data数组里的最小值
+    uint8_t min = 0;
+    for (uint8_t i = 0; i < 128; i++)
+    {
+      if (tsl1401_data[i] < tsl1401_data[min])
+      {
+        min = i;
+      }
+    }
+    //定义tsl1401_data平均值变量
+    float tsl1401_data_average = 0;
+    //for循环计算tsl1401_data平均值
+    for (uint8_t i = 0; i < 128; i++)
+    {
+      tsl1401_data_average += tsl1401_data[i];
+    }
+    tsl1401_data_average /= 128.0;
+    
 
-
-
-    osDelay(100);
+    //如果平均值与最小值差距在10以外，执行循迹转向PID
+    if (tsl1401_data_average - tsl1401_data[min]>30)
+    {
+        
+      //计算循迹转向PID
+      float TSL1401_pid_out = pid_update(&TSL1401_pid, min - 64);
+        //PID输出滤波
+        pid_out_filter = pid_out_filter * 0.9 + TSL1401_pid_out * 0.1;
+      //发送循迹转向PID
+      xQueueSend(target_speed_difference_QueueHandle, &pid_out_filter, 0);
+    }
+    
+    vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
   }
   /* USER CODE END TSL1401Screen_Task */
 }

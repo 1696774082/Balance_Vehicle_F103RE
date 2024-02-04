@@ -10,102 +10,6 @@ void ui_pidControlScreen_screen_init(void)
     ui_pidControlScreen = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_pidControlScreen, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
-    ui_Uprightring = lv_obj_create(ui_pidControlScreen);
-    lv_obj_set_width(ui_Uprightring, lv_pct(100));
-    lv_obj_set_height(ui_Uprightring, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_Uprightring, LV_ALIGN_TOP_MID);
-    lv_obj_clear_flag(ui_Uprightring, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    lv_obj_set_style_bg_color(ui_Uprightring, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_Uprightring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(ui_Uprightring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_left(ui_Uprightring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_right(ui_Uprightring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_top(ui_Uprightring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_bottom(ui_Uprightring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    ui_UprightringP = lv_label_create(ui_Uprightring);
-    lv_obj_set_width(ui_UprightringP, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_UprightringP, LV_SIZE_CONTENT);    /// 1
-    lv_label_set_text(ui_UprightringP, "P:0.0");
-    lv_obj_add_flag(ui_UprightringP, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_set_style_text_font(ui_UprightringP, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(ui_UprightringP, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_opa(ui_UprightringP, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_color(ui_UprightringP, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_opa(ui_UprightringP, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_color(ui_UprightringP, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_set_style_text_opa(ui_UprightringP, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_set_style_bg_color(ui_UprightringP, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_set_style_bg_opa(ui_UprightringP, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-
-    ui_UprightringLabel = lv_label_create(ui_Uprightring);
-    lv_obj_set_width(ui_UprightringLabel, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_UprightringLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_UprightringLabel, LV_ALIGN_TOP_MID);
-    lv_label_set_text(ui_UprightringLabel, "直立");
-    lv_obj_set_style_text_font(ui_UprightringLabel, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    ui_UprightringD = lv_label_create(ui_Uprightring);
-    lv_obj_set_width(ui_UprightringD, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_UprightringD, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_UprightringD, LV_ALIGN_TOP_RIGHT);
-    lv_label_set_text(ui_UprightringD, "D:0.0");
-    lv_obj_add_flag(ui_UprightringD, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_set_style_text_font(ui_UprightringD, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(ui_UprightringD, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_opa(ui_UprightringD, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_color(ui_UprightringD, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_opa(ui_UprightringD, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-
-    ui_Speedloop = lv_obj_create(ui_pidControlScreen);
-    lv_obj_set_width(ui_Speedloop, lv_pct(100));
-    lv_obj_set_height(ui_Speedloop, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Speedloop, 0);
-    lv_obj_set_y(ui_Speedloop, -12);
-    lv_obj_set_align(ui_Speedloop, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_Speedloop, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    lv_obj_set_style_bg_color(ui_Speedloop, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_Speedloop, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(ui_Speedloop, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_left(ui_Speedloop, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_right(ui_Speedloop, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_top(ui_Speedloop, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_bottom(ui_Speedloop, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    ui_SpeedloopP = lv_label_create(ui_Speedloop);
-    lv_obj_set_width(ui_SpeedloopP, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_SpeedloopP, LV_SIZE_CONTENT);    /// 1
-    lv_label_set_text(ui_SpeedloopP, "P:0.0");
-    lv_obj_add_flag(ui_SpeedloopP, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_set_style_text_font(ui_SpeedloopP, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(ui_SpeedloopP, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_opa(ui_SpeedloopP, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_color(ui_SpeedloopP, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_opa(ui_SpeedloopP, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_color(ui_SpeedloopP, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_set_style_text_opa(ui_SpeedloopP, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_set_style_bg_color(ui_SpeedloopP, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_set_style_bg_opa(ui_SpeedloopP, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-
-    ui_SpeedloopLabel = lv_label_create(ui_Speedloop);
-    lv_obj_set_width(ui_SpeedloopLabel, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_SpeedloopLabel, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_SpeedloopLabel, LV_ALIGN_TOP_MID);
-    lv_label_set_text(ui_SpeedloopLabel, "速度");
-    lv_obj_set_style_text_font(ui_SpeedloopLabel, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
-
-    ui_SpeedloopI = lv_label_create(ui_Speedloop);
-    lv_obj_set_width(ui_SpeedloopI, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_SpeedloopI, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_SpeedloopI, LV_ALIGN_TOP_RIGHT);
-    lv_label_set_text(ui_SpeedloopI, "I:0.0");
-    lv_obj_add_flag(ui_SpeedloopI, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_set_style_text_font(ui_SpeedloopI, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(ui_SpeedloopI, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_opa(ui_SpeedloopI, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_color(ui_SpeedloopI, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_opa(ui_SpeedloopI, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-
     ui_MotorSwitch = lv_switch_create(ui_pidControlScreen);
     lv_obj_set_width(ui_MotorSwitch, 26);
     lv_obj_set_height(ui_MotorSwitch, 14);
@@ -134,59 +38,61 @@ void ui_pidControlScreen_screen_init(void)
     lv_obj_set_style_bg_color(ui_MotorSwitch, lv_color_hex(0x000000), LV_PART_KNOB | LV_STATE_CHECKED);
     lv_obj_set_style_bg_opa(ui_MotorSwitch, 255, LV_PART_KNOB | LV_STATE_CHECKED);
 
-    ui_Steeringring = lv_obj_create(ui_pidControlScreen);
-    lv_obj_set_width(ui_Steeringring, lv_pct(100));
-    lv_obj_set_height(ui_Steeringring, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_Steeringring, 0);
-    lv_obj_set_y(ui_Steeringring, 2);
-    lv_obj_set_align(ui_Steeringring, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_Steeringring, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    lv_obj_set_style_bg_color(ui_Steeringring, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_Steeringring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(ui_Steeringring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_left(ui_Steeringring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_right(ui_Steeringring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_top(ui_Steeringring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_bottom(ui_Steeringring, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_PIDControl = lv_obj_create(ui_pidControlScreen);
+    lv_obj_set_width(ui_PIDControl, LV_SIZE_CONTENT);   /// 100
+    lv_obj_set_height(ui_PIDControl, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_PIDControl, LV_ALIGN_TOP_RIGHT);
+    lv_obj_set_flex_flow(ui_PIDControl, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(ui_PIDControl, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_PIDControl, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_bg_color(ui_PIDControl, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_PIDControl, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_PIDControl, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_left(ui_PIDControl, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(ui_PIDControl, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(ui_PIDControl, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_bottom(ui_PIDControl, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_row(ui_PIDControl, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_column(ui_PIDControl, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_SteeringringP = lv_label_create(ui_Steeringring);
-    lv_obj_set_width(ui_SteeringringP, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_SteeringringP, LV_SIZE_CONTENT);    /// 1
-    lv_label_set_text(ui_SteeringringP, "P:0.0");
-    lv_obj_add_flag(ui_SteeringringP, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_set_style_text_font(ui_SteeringringP, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(ui_SteeringringP, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_opa(ui_SteeringringP, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_color(ui_SteeringringP, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_opa(ui_SteeringringP, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_color(ui_SteeringringP, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_set_style_text_opa(ui_SteeringringP, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_set_style_bg_color(ui_SteeringringP, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_set_style_bg_opa(ui_SteeringringP, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
+    ui_P = lv_label_create(ui_PIDControl);
+    lv_obj_set_width(ui_P, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_P, LV_SIZE_CONTENT);    /// 1
+    lv_label_set_text(ui_P, "P:0.0");
+    lv_obj_add_flag(ui_P, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_font(ui_P, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui_P, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_text_opa(ui_P, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_bg_color(ui_P, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_bg_opa(ui_P, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_text_color(ui_P, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
+    lv_obj_set_style_text_opa(ui_P, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
+    lv_obj_set_style_bg_color(ui_P, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
+    lv_obj_set_style_bg_opa(ui_P, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
 
-    ui_SteeringringD = lv_label_create(ui_Steeringring);
-    lv_obj_set_width(ui_SteeringringD, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_SteeringringD, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_SteeringringD, LV_ALIGN_TOP_RIGHT);
-    lv_label_set_text(ui_SteeringringD, "D:0.0");
-    lv_obj_add_flag(ui_SteeringringD, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_set_style_text_font(ui_SteeringringD, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(ui_SteeringringD, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_opa(ui_SteeringringD, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_color(ui_SteeringringD, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_opa(ui_SteeringringD, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
+    ui_I = lv_label_create(ui_PIDControl);
+    lv_obj_set_width(ui_I, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_I, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_I, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_I, "I:0.0");
+    lv_obj_add_flag(ui_I, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_font(ui_I, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui_I, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_text_opa(ui_I, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_bg_color(ui_I, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_bg_opa(ui_I, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
 
-    ui_SteeringringI = lv_label_create(ui_Steeringring);
-    lv_obj_set_width(ui_SteeringringI, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_SteeringringI, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_SteeringringI, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_SteeringringI, "I:0.0");
-    lv_obj_add_flag(ui_SteeringringI, LV_OBJ_FLAG_CLICKABLE);     /// Flags
-    lv_obj_set_style_text_font(ui_SteeringringI, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(ui_SteeringringI, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_text_opa(ui_SteeringringI, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_color(ui_SteeringringI, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_opa(ui_SteeringringI, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
+    ui_D = lv_label_create(ui_PIDControl);
+    lv_obj_set_width(ui_D, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_D, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_D, LV_ALIGN_TOP_RIGHT);
+    lv_label_set_text(ui_D, "D:0.0");
+    lv_obj_add_flag(ui_D, LV_OBJ_FLAG_CLICKABLE);     /// Flags
+    lv_obj_set_style_text_font(ui_D, &ui_font_chinese, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui_D, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_text_opa(ui_D, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_bg_color(ui_D, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_FOCUSED);
+    lv_obj_set_style_bg_opa(ui_D, 255, LV_PART_MAIN | LV_STATE_FOCUSED);
 
     ui_zeroButton = lv_btn_create(ui_pidControlScreen);
     lv_obj_set_width(ui_zeroButton, LV_SIZE_CONTENT);   /// 1
@@ -252,14 +158,16 @@ void ui_pidControlScreen_screen_init(void)
     lv_obj_set_style_text_color(ui_Label3, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_FOCUS_KEY);
     lv_obj_set_style_text_opa(ui_Label3, 255, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
 
-    lv_obj_add_event_cb(ui_UprightringP, ui_event_UprightringP, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(ui_UprightringD, ui_event_UprightringD, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(ui_SpeedloopP, ui_event_SpeedloopP, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(ui_SpeedloopI, ui_event_SpeedloopI, LV_EVENT_ALL, NULL);
+    ui_PIDinput = lv_label_create(ui_pidControlScreen);
+    lv_obj_set_width(ui_PIDinput, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_PIDinput, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_PIDinput, LV_ALIGN_LEFT_MID);
+    lv_label_set_text(ui_PIDinput, "in:0.0");
+
     lv_obj_add_event_cb(ui_MotorSwitch, ui_event_MotorSwitch, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(ui_SteeringringP, ui_event_SteeringringP, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(ui_SteeringringD, ui_event_SteeringringD, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(ui_SteeringringI, ui_event_SteeringringI, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_P, ui_event_P, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_I, ui_event_I, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_D, ui_event_D, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_zeroButton, ui_event_zeroButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_backButton, ui_event_backButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_pidControlScreen, ui_event_pidControlScreen, LV_EVENT_ALL, NULL);

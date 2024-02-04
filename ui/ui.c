@@ -35,33 +35,22 @@ lv_obj_t * ui_Label6;
 void ui_pidControlScreen_screen_init(void);
 void ui_event_pidControlScreen(lv_event_t * e);
 lv_obj_t * ui_pidControlScreen;
-lv_obj_t * ui_Uprightring;
-void ui_event_UprightringP(lv_event_t * e);
-lv_obj_t * ui_UprightringP;
-lv_obj_t * ui_UprightringLabel;
-void ui_event_UprightringD(lv_event_t * e);
-lv_obj_t * ui_UprightringD;
-lv_obj_t * ui_Speedloop;
-void ui_event_SpeedloopP(lv_event_t * e);
-lv_obj_t * ui_SpeedloopP;
-lv_obj_t * ui_SpeedloopLabel;
-void ui_event_SpeedloopI(lv_event_t * e);
-lv_obj_t * ui_SpeedloopI;
 void ui_event_MotorSwitch(lv_event_t * e);
 lv_obj_t * ui_MotorSwitch;
-lv_obj_t * ui_Steeringring;
-void ui_event_SteeringringP(lv_event_t * e);
-lv_obj_t * ui_SteeringringP;
-void ui_event_SteeringringD(lv_event_t * e);
-lv_obj_t * ui_SteeringringD;
-void ui_event_SteeringringI(lv_event_t * e);
-lv_obj_t * ui_SteeringringI;
+lv_obj_t * ui_PIDControl;
+void ui_event_P(lv_event_t * e);
+lv_obj_t * ui_P;
+void ui_event_I(lv_event_t * e);
+lv_obj_t * ui_I;
+void ui_event_D(lv_event_t * e);
+lv_obj_t * ui_D;
 void ui_event_zeroButton(lv_event_t * e);
 lv_obj_t * ui_zeroButton;
 lv_obj_t * ui_Label1;
 void ui_event_backButton(lv_event_t * e);
 lv_obj_t * ui_backButton;
 lv_obj_t * ui_Label3;
+lv_obj_t * ui_PIDinput;
 
 // SCREEN: ui_MotorControlScreen
 void ui_MotorControlScreen_screen_init(void);
@@ -136,51 +125,10 @@ void ui_event_pidControlScreen(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_SCREEN_LOAD_START) {
-        pidControlScreen_init(e);
+        pidControlScreen_load_start(e);
     }
-}
-void ui_event_UprightringP(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
-        UprightringP_Left(e);
-    }
-    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
-        UprightringP_Right(e);
-    }
-}
-void ui_event_UprightringD(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
-        UprightringD_Left(e);
-    }
-    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
-        UprightringD_Right(e);
-    }
-}
-void ui_event_SpeedloopP(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
-        SpeedloopP_Left(e);
-    }
-    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
-        SpeedloopP_Right(e);
-    }
-}
-void ui_event_SpeedloopI(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
-        SpeedloopI_Left(e);
-    }
-    if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
-        SpeedloopI_Right(e);
+    if(event_code == LV_EVENT_SCREEN_UNLOAD_START) {
+        pidControlScreen_unload_start(e);
     }
 }
 void ui_event_MotorSwitch(lv_event_t * e)
@@ -194,37 +142,37 @@ void ui_event_MotorSwitch(lv_event_t * e)
         Motor_switch_unchecked(e);
     }
 }
-void ui_event_SteeringringP(lv_event_t * e)
+void ui_event_P(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
-        SteeringRingP_Left(e);
+        P_Left(e);
     }
     if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
-        SteeringRingP_Right(e);
+        P_Right(e);
     }
 }
-void ui_event_SteeringringD(lv_event_t * e)
+void ui_event_I(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
-        SteeringRingD_Left(e);
+        I_Left(e);
     }
     if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
-        SteeringRingD_Right(e);
+        I_Right(e);
     }
 }
-void ui_event_SteeringringI(lv_event_t * e)
+void ui_event_D(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_LEFT) {
-        SteeringRingI_Left(e);
+        D_Left(e);
     }
     if(event_code == LV_EVENT_KEY &&  lv_event_get_key(e) == LV_KEY_RIGHT) {
-        SteeringRingI_Right(e);
+        D_Right(e);
     }
 }
 void ui_event_zeroButton(lv_event_t * e)

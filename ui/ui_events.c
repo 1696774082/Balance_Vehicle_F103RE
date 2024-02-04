@@ -6,143 +6,61 @@
 #include "ui.h"
 #include "pid.h"
 #include "stdio.h"
-#include "cmsis_os.h"
+#include "FreeRTOS.h"
+#include "cmsis_os2.h"
 #include "queue.h"
+
 #include "task.h"
-extern pid_handler Upright_ring_pid,Speed_loop_pid,Steering_ring_pid;
+extern pid_handler Upright_ring_pid,Speed_loop_pid,Steering_ring_pid,TSL1401_pid;
 extern osMessageQueueId_t Motor_isEnable_queueHandle;
+extern osMessageQueueId_t target_speed_QueueHandle,target_speed_difference_QueueHandle;
+//输入现在想调试的环
+pid_handler *pid=&TSL1401_pid;
+//输入kp，ki，kd的步进值
+float kp_step=0.1;
+float ki_step=0.1;
+float kd_step=0.1;
+
+
 char sbuf[30];
 
 
 
-void UprightringP_Left(lv_event_t * e)
-{
-	Upright_ring_pid.kp +=100;
-    lv_label_set_text_fmt(ui_UprightringP, "P:%d", (int)Upright_ring_pid.kp);
-}
-
-void UprightringP_Right(lv_event_t * e)
-{
-	Upright_ring_pid.kp +=-100;
-    lv_label_set_text_fmt(ui_UprightringP, "P:%d", (int)Upright_ring_pid.kp);
-}
-
-void UprightringD_Left(lv_event_t * e)
-{
-	Upright_ring_pid.kd +=200;
-    lv_label_set_text_fmt(ui_UprightringD, "D:%d", (int)Upright_ring_pid.kd);
-}
-
-void UprightringD_Right(lv_event_t * e)
-{
-	Upright_ring_pid.kd +=-200;
-    lv_label_set_text_fmt(ui_UprightringD, "D:%d", (int)Upright_ring_pid.kd);
-}
-
-void SpeedloopP_Left(lv_event_t * e)
-{
-	Speed_loop_pid.kp +=5;
-    sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
-    lv_label_set_text(ui_SpeedloopP, sbuf);
-}
-
-void SpeedloopP_Right(lv_event_t * e)
-{
-	Speed_loop_pid.kp -=5;
-    sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
-    lv_label_set_text(ui_SpeedloopP, sbuf);
-}
-
-void SpeedloopI_Left(lv_event_t * e)
-{
-	Speed_loop_pid.ki +=0.05;
-    sprintf(sbuf,"I:%.2f",Speed_loop_pid.ki);
-    lv_label_set_text(ui_SpeedloopI, sbuf);
-}
-
-void SpeedloopI_Right(lv_event_t * e)
-{
-	Speed_loop_pid.ki -=0.05;
-    sprintf(sbuf,"I:%.2f",Speed_loop_pid.ki);
-    lv_label_set_text(ui_SpeedloopI, sbuf);
-}
-
+//电机启动
 void Motor_switch_checked(lv_event_t * e)
 {
     uint8_t isEnable=1;
+    //速度环I清空
     Speed_loop_pid.sum_deviation=0;
-	xQueueSend(Motor_isEnable_queueHandle, &isEnable, 10);
+	xQueueOverwrite(Motor_isEnable_queueHandle, &isEnable);
+    //速度环目标清空
+    // float target_speed=0;
+    // xQueueSend(target_speed_QueueHandle, &target_speed, 0);
+    //转向环I清空
+    Steering_ring_pid.sum_deviation=0;
+    
 }
 
 void Motor_switch_unchecked(lv_event_t * e)
 {
 	uint8_t isEnable=0;
-	xQueueSend(Motor_isEnable_queueHandle, &isEnable, 10);
+	xQueueOverwrite(Motor_isEnable_queueHandle, &isEnable);
 }
 
-void SteeringRingP_Left(lv_event_t * e)
-{
-	Steering_ring_pid.kp +=10;
-    sprintf(sbuf,"P:%d",(int)Steering_ring_pid.kp);
-    lv_label_set_text(ui_SteeringringP, sbuf);
-}
 
-void SteeringRingP_Right(lv_event_t * e)
-{
-	Steering_ring_pid.kp -=10;
-    sprintf(sbuf,"P:%d",(int)Steering_ring_pid.kp);
-    lv_label_set_text(ui_SteeringringP, sbuf);
-}
-
-void SteeringRingD_Left(lv_event_t * e)
-{
-	Steering_ring_pid.kd +=10;
-    sprintf(sbuf,"D:%.1f",Steering_ring_pid.kd);
-    lv_label_set_text(ui_SteeringringD, sbuf);
-}
-
-void SteeringRingD_Right(lv_event_t * e)
-{
-	Steering_ring_pid.kd -=10;
-    sprintf(sbuf,"D:%.1f",Steering_ring_pid.kd);
-    lv_label_set_text(ui_SteeringringD, sbuf);
-}
-
-void SteeringRingI_Left(lv_event_t * e)
-{
-	Steering_ring_pid.ki +=0.5f;
-    sprintf(sbuf,"I:%.1f",Steering_ring_pid.ki);
-    lv_label_set_text(ui_SteeringringI, sbuf);
-}
-
-void SteeringRingI_Right(lv_event_t * e)
-{
-	Steering_ring_pid.ki -=0.5f;
-    sprintf(sbuf,"I:%.1f",Steering_ring_pid.ki);
-    lv_label_set_text(ui_SteeringringI, sbuf);
-}
 
 void zero(lv_event_t * e)
 {
-	Upright_ring_pid.kp=0;
-    Upright_ring_pid.kd=0;
-    Speed_loop_pid.kp=0;
-    Speed_loop_pid.ki=0;
-    Steering_ring_pid.kp=0;
-    Steering_ring_pid.kd=0;
-    Steering_ring_pid.ki=0;
-    lv_label_set_text_fmt(ui_UprightringP, "P:%d", (int)Upright_ring_pid.kp);
-    lv_label_set_text_fmt(ui_UprightringD, "D:%d", (int)Upright_ring_pid.kd);
-    sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
-    lv_label_set_text(ui_SpeedloopP, sbuf);
-    sprintf(sbuf,"I:%.2f",Speed_loop_pid.ki);
-    lv_label_set_text(ui_SpeedloopI, sbuf);
-    sprintf(sbuf,"P:%d",Steering_ring_pid.kp);
-    lv_label_set_text(ui_SteeringringP, sbuf);
-    sprintf(sbuf,"D:%d",Steering_ring_pid.kd);
-    lv_label_set_text(ui_SteeringringD, sbuf);
-    sprintf(sbuf,"I:%.2f",Steering_ring_pid.ki);
-    lv_label_set_text(ui_SteeringringI, sbuf);
+	pid->kp=0;
+    pid->ki=0;
+    pid->kd=0;
+    sprintf(sbuf,"P:%.2f",pid->kp);
+    lv_label_set_text(ui_P, sbuf);
+    sprintf(sbuf,"I:%.2f",pid->ki);
+    lv_label_set_text(ui_I, sbuf);
+    sprintf(sbuf,"D:%.2f",pid->kd);
+    lv_label_set_text(ui_D, sbuf);
+
 }
 
 void mainScreen_init(lv_event_t * e)
@@ -155,35 +73,8 @@ void mainScreen_init(lv_event_t * e)
 	lv_group_add_obj(lv_group_get_default(), ui_toTsl1401Button);
 }
 
-void pidControlScreen_init(lv_event_t * e)
-{
-    lv_group_remove_all_objs(lv_group_get_default());
-	lv_group_add_obj(lv_group_get_default(), ui_MotorSwitch);
-	lv_group_add_obj(lv_group_get_default(), ui_UprightringP);
-    lv_group_add_obj(lv_group_get_default(), ui_UprightringD);
-    lv_group_add_obj(lv_group_get_default(), ui_SpeedloopP);
-    lv_group_add_obj(lv_group_get_default(), ui_SpeedloopI);
-    lv_group_add_obj(lv_group_get_default(), ui_SteeringringP);
-    lv_group_add_obj(lv_group_get_default(), ui_SteeringringI);
-    lv_group_add_obj(lv_group_get_default(), ui_SteeringringD);
-    lv_group_add_obj(lv_group_get_default(), ui_backButton);
-    lv_group_add_obj(lv_group_get_default(), ui_zeroButton);
-    
-    
-    lv_label_set_text_fmt(ui_UprightringP, "P:%d", (int)Upright_ring_pid.kp);
-    lv_label_set_text_fmt(ui_UprightringD, "D:%d", (int)Upright_ring_pid.kd);
-    sprintf(sbuf,"P:%.1f",Speed_loop_pid.kp);
-    lv_label_set_text(ui_SpeedloopP, sbuf);
-    sprintf(sbuf,"I:%.1f",Speed_loop_pid.ki);
-    lv_label_set_text(ui_SpeedloopI, sbuf);
-    sprintf(sbuf,"P:%d",(int)Steering_ring_pid.kp);
-    lv_label_set_text(ui_SteeringringP, sbuf);
-    sprintf(sbuf,"I:%.2f",Steering_ring_pid.ki);
-    lv_label_set_text(ui_SteeringringI, sbuf);
-    sprintf(sbuf,"D:%d",(int)Steering_ring_pid.kd);
-    lv_label_set_text(ui_SteeringringD, sbuf);
-}
-int32_t target_speed_difference=0;
+
+float target_speed_difference=0;
   float target_speed;
   extern osMessageQueueId_t target_speed_QueueHandle,target_speed_difference_QueueHandle;
 void Forwardandbackward_Left(lv_event_t * e)
@@ -206,7 +97,7 @@ void Leftturnandrightturn_Left(lv_event_t * e)
 {
 	target_speed_difference+=10;
     xQueueOverwrite(target_speed_difference_QueueHandle, &target_speed_difference);
-    sprintf(sbuf,"%d",target_speed_difference);
+    sprintf(sbuf,"%.1f",target_speed_difference);
     lv_label_set_text(ui_Left_turn_and_right_turn, sbuf);
 }
 
@@ -214,7 +105,7 @@ void Leftturnandrightturn_Right(lv_event_t * e)
 {
 	target_speed_difference-=10;
     xQueueOverwrite(target_speed_difference_QueueHandle, &target_speed_difference);
-    sprintf(sbuf,"%d",target_speed_difference);
+    sprintf(sbuf,"%.1f",target_speed_difference);
     lv_label_set_text(ui_Left_turn_and_right_turn, sbuf);
 }
 
@@ -225,16 +116,130 @@ void MotorControlScreen_load_start(lv_event_t * e)
 	lv_group_add_obj(lv_group_get_default(), ui_Left_turn_and_right_turn);
 	lv_group_add_obj(lv_group_get_default(), ui_backButton1);
 	lv_group_add_obj(lv_group_get_default(), ui_MotorSwitch1);
+    //更新电机开关状态
+    uint8_t isEnable;
+    xQueuePeek(Motor_isEnable_queueHandle, &isEnable, 0);
+    if(isEnable)
+    {
+        lv_obj_add_state(ui_MotorSwitch1, LV_STATE_CHECKED);
+    }
+    else
+    {
+        lv_obj_clear_state(ui_MotorSwitch1, LV_STATE_CHECKED);
+    }
 }
 extern osThreadId_t TSL1401ScreenHandle;
 void TSL1401Screen_load_start(lv_event_t * e)
 {
 	lv_group_remove_all_objs(lv_group_get_default());
 	lv_group_add_obj(lv_group_get_default(), ui_tsl1401Screen);
+    //初始化前进速度
+    float target_speed=0.1f;
+    xQueueSend(target_speed_QueueHandle, &target_speed, 0);
+    Motor_switch_checked(NULL);
+    
     osThreadResume(TSL1401ScreenHandle);
 }
 
 void TSL1401Screen_unload_start(lv_event_t * e)
 {
 	osThreadSuspend(TSL1401ScreenHandle);
+    Motor_switch_unchecked(NULL);
+    //速度环目标清空
+    float target_speed=0;
+    xQueueSend(target_speed_QueueHandle, &target_speed, 0);
+    //转向环目标清空
+    float target_speed_difference=0;
+    xQueueSend(target_speed_difference_QueueHandle, &target_speed_difference, 0);
+}
+
+void P_Left(lv_event_t * e)
+{
+    pid->kp+=kp_step;
+	sprintf(sbuf,"P:%.2f",pid->kp);
+    lv_label_set_text(ui_P, sbuf);
+}
+
+void P_Right(lv_event_t * e)
+{
+	pid->kp-=kp_step;
+	sprintf(sbuf,"P:%.2f",pid->kp);
+    lv_label_set_text(ui_P, sbuf);
+}
+
+void I_Left(lv_event_t * e)
+{
+	pid->ki+=ki_step;
+	sprintf(sbuf,"I:%.2f",pid->ki);
+    lv_label_set_text(ui_I, sbuf);
+}
+
+void I_Right(lv_event_t * e)
+{
+	pid->ki-=ki_step;
+	sprintf(sbuf,"I:%.2f",pid->ki);
+    lv_label_set_text(ui_I, sbuf);
+}
+
+void D_Left(lv_event_t * e)
+{
+	pid->kd+=kd_step;
+    sprintf(sbuf,"D:%.2f",pid->kd);
+    lv_label_set_text(ui_D, sbuf);
+}
+
+void D_Right(lv_event_t * e)
+{
+	pid->kd-=kd_step;
+    sprintf(sbuf,"D:%.2f",pid->kd);
+    lv_label_set_text(ui_D, sbuf);
+}
+void PIDControlScreen_Task(void *argument){
+  char text[30];
+  while (1)
+  {
+    //读取现在想调试的环的输入显示在ui_PIDinput上
+    sprintf(text,"IN:%.2f",pid->deviation);
+    lv_label_set_text(ui_PIDinput, text);
+    osDelay(100);
+  }
+  
+  
+  
+}
+TaskHandle_t PIDControlScreen_Task_handler;
+void pidControlScreen_load_start(lv_event_t * e)
+{
+	lv_group_remove_all_objs(lv_group_get_default());
+	lv_group_add_obj(lv_group_get_default(), ui_MotorSwitch);
+	lv_group_add_obj(lv_group_get_default(), ui_P);
+    lv_group_add_obj(lv_group_get_default(), ui_I);
+    lv_group_add_obj(lv_group_get_default(), ui_D);
+    
+    lv_group_add_obj(lv_group_get_default(), ui_backButton);
+    lv_group_add_obj(lv_group_get_default(), ui_zeroButton);
+    
+    sprintf(sbuf,"P:%.2f",pid->kp);
+    lv_label_set_text(ui_P, sbuf);
+    sprintf(sbuf,"I:%.2f",pid->ki);
+    lv_label_set_text(ui_I, sbuf);
+    sprintf(sbuf,"D:%.2f",pid->kd);
+    lv_label_set_text(ui_D, sbuf);
+    //更新电机开关状态
+    uint8_t isEnable;
+    xQueuePeek(Motor_isEnable_queueHandle, &isEnable, 0);
+    if(isEnable)
+    {
+        lv_obj_add_state(ui_MotorSwitch, LV_STATE_CHECKED);
+    }
+    else
+    {
+        lv_obj_clear_state(ui_MotorSwitch, LV_STATE_CHECKED);
+    }
+    xTaskCreate(PIDControlScreen_Task, "PIDControlScreen_Task", 256, NULL, 1, &PIDControlScreen_Task_handler);
+}
+
+void pidControlScreen_unload_start(lv_event_t * e)
+{
+	vTaskDelete(PIDControlScreen_Task_handler);
 }

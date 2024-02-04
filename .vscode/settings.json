@@ -6,6 +6,16 @@
         "stm32f1xx_hal_rcc.h": "c",
         "stm32f1xx_hal_def.h": "c",
         "stddef.h": "c",
-        "stm32f1xx.h": "c"
+        "stm32f1xx.h": "c",
+        "freertos.h": "c",
+        "task.h": "c",
+        "list.h": "c",
+        "cmsis_os2.h": "c",
+        "queue.h": "c",
+        "portable.h": "c",
+        "string.h": "c",
+        "stdlib.h": "c",
+        "stack_macros.h": "c",
+        "timers.h": "c"
     }
 }

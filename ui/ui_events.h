@@ -11,23 +11,16 @@ extern "C" {
 #endif
 
 void mainScreen_init(lv_event_t * e);
-void pidControlScreen_init(lv_event_t * e);
-void UprightringP_Left(lv_event_t * e);
-void UprightringP_Right(lv_event_t * e);
-void UprightringD_Left(lv_event_t * e);
-void UprightringD_Right(lv_event_t * e);
-void SpeedloopP_Left(lv_event_t * e);
-void SpeedloopP_Right(lv_event_t * e);
-void SpeedloopI_Left(lv_event_t * e);
-void SpeedloopI_Right(lv_event_t * e);
+void pidControlScreen_load_start(lv_event_t * e);
+void pidControlScreen_unload_start(lv_event_t * e);
 void Motor_switch_checked(lv_event_t * e);
 void Motor_switch_unchecked(lv_event_t * e);
-void SteeringRingP_Left(lv_event_t * e);
-void SteeringRingP_Right(lv_event_t * e);
-void SteeringRingD_Left(lv_event_t * e);
-void SteeringRingD_Right(lv_event_t * e);
-void SteeringRingI_Left(lv_event_t * e);
-void SteeringRingI_Right(lv_event_t * e);
+void P_Left(lv_event_t * e);
+void P_Right(lv_event_t * e);
+void I_Left(lv_event_t * e);
+void I_Right(lv_event_t * e);
+void D_Left(lv_event_t * e);
+void D_Right(lv_event_t * e);
 void zero(lv_event_t * e);
 void MotorControlScreen_load_start(lv_event_t * e);
 void Forwardandbackward_Left(lv_event_t * e);
