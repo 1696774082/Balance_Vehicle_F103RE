@@ -17,5 +17,6 @@
         "stdlib.h": "c",
         "stack_macros.h": "c",
         "timers.h": "c"
-    }
+    },
+    "cmake.sourceDirectory": "E:/STM32Project/HAL/Balanced_vehicle_F103RE/ui"
 }
